@@ -10,6 +10,7 @@ import partlyCloudyNight from "../icons/nightcloudy2.png"
 import clearDay from "../icons/clear.png";
 import clearNight from "../icons/night.png";
 import nightPhoto from "../icons/paulo-carrolo-YcBmccmIIww-unsplash.jpg"
+import dayPhoto from "../icons/artur-zhadan-_jdU23LRrhs-unsplash.jpg";
 
 export const DomHandler = (function() {
   const displayIcons = {
@@ -77,7 +78,7 @@ export const DomHandler = (function() {
     let byHourContainer = document.querySelector(".by-hour-forecast");
     byHourContainer.innerHTML = "";
 
-    if (new Date().getHours() >= 19) {
+    if (+data.localTime.slice(0, 2) >= 19 && +data.localTime.slice(0, 2) <= 23 || +data.localTime.slice(0, 2) <= 6) {
       document.body.style.background = `url(${nightPhoto})`;
       document.body.style.backgroundSize = "cover";
       document.body.style.height = "100vh";
@@ -89,12 +90,24 @@ export const DomHandler = (function() {
       container.classList.add("night");
     }
 
-    data.currentDayInfo.hours.slice(new Date().getHours() - 1, 24).forEach((hour) => {
+    if (+data.localTime.slice(0, 2) <= 19 && +data.localTime.slice(0, 2) >= 6) {
+      document.body.style.background = `url(${dayPhoto})`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.height = "100vh";
+      document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.overflow = "hidden";
+
+      let container = document.querySelector(".container");
+      container.classList.remove("night");
+      container.classList.add("day");
+    }
+
+    data.currentDayInfo.hours.slice(+data.localTime.slice(0, 2) - 1, 24).forEach((hour) => {
       const div = document.createElement("div");
       div.classList.add("hour-element");
 
       div.innerHTML = `
-        <p class="hour">${+hour.datetime.slice(0, 2) == new Date().getHours() ? "Now" : hour.datetime.slice(0, 5)}</p>
+        <p class="hour">${+hour.datetime.slice(0, 2) == data.localTime.slice(0, 2) ? "Now" : hour.datetime.slice(0, 5)}</p>
         <div class="img-holder"></div>
         <p>${Converter.farenheitToCelsius(hour.temp)} °C</p>
       `;

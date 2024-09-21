@@ -16,9 +16,12 @@ export const RequestHandler = (function() {
 
   const parseRequest = (data) => {
 
+    console.log(data);
+
     let resolvedAddress = data.resolvedAddress;
     let address = data.address;
     let currentConditions = data.currentConditions;
+    let localTime = currentConditions.datetime;
 
     let currentDayInfo = {
       feelslike: currentConditions.feelslike,
@@ -33,7 +36,7 @@ export const RequestHandler = (function() {
 
     let daysArray = data.days.slice(1, 8);
 
-    return { resolvedAddress, address, currentDayInfo, daysArray };
+    return { resolvedAddress, address, localTime, currentDayInfo, daysArray };
   }
 
   return {
